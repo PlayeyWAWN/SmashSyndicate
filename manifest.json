@@ -1,0 +1,41 @@
+{
+  "name": "Smash Syndicate - Badminton Engagement Network",
+  "short_name": "Smash Syndicate",
+  "description": "Complete badminton tournament and match management application",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#2196F3",
+  "theme_color": "#2196F3",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='50' fill='%232196F3'/%3E%3Ctext x='256' y='340' font-family='Arial' font-size='300' text-anchor='middle' fill='white'%3E🏸%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='20' fill='%232196F3'/%3E%3Ctext x='96' y='128' font-family='Arial' font-size='120' text-anchor='middle' fill='white'%3E🏸%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 144 144'%3E%3Crect width='144' height='144' rx='15' fill='%232196F3'/%3E%3Ctext x='72' y='96' font-family='Arial' font-size='90' text-anchor='middle' fill='white'%3E🏸%3C/text%3E%3C/svg%3E",
+      "sizes": "144x144",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["sports", "productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 844'%3E%3Crect width='390' height='844' fill='%23f0f0f0'/%3E%3Ctext x='195' y='422' font-family='Arial' font-size='24' text-anchor='middle' fill='%23666'%3ESmash Syndicate Screenshot%3C/text%3E%3C/svg%3E",
+      "sizes": "390x844",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ]
+}

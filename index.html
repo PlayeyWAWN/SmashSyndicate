@@ -20,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- PWA Manifest -->
-  <link rel="manifest" href="#" id="manifest-link">
+  <link rel="manifest" href="manifest.json" id="manifest-link">
   
   <style>
     * {
@@ -134,6 +134,11 @@
       overflow-x: hidden;
       transition: background 0.3s ease, color 0.3s ease;
       position: relative;
+      /* iOS Safari specific fixes */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
     
     body::before {
@@ -152,23 +157,14 @@
     }
     
     body::after {
-      content: 'BADMINTON SHUTTLECOCK COURT MATCH PLAYER TEAM WIN LOSE GAME SET POINT SERVE RALLY SMASH DROP CLEAR DRIVE NET PLAY TOURNAMENT CHAMPION FINAL SEMI QUARTER ROUND BRACKET SEED RANKING SKILL BEGINNER INTERMEDIATE ADVANCED ELITE APEX JOURNEYMAN VETERAN CADET INITIATE';
+      content: '';
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      font-size: 14px;
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.1);
-      line-height: 1.5;
-      word-spacing: 50px;
-      letter-spacing: 2px;
-      transform: rotate(-5deg);
       pointer-events: none;
       z-index: -1;
-      overflow: hidden;
-      white-space: nowrap;
     }
     
     .app-container {
@@ -222,6 +218,13 @@
       display: none;
       padding: 20px;
       overflow-y: auto;
+      /* iOS Safari specific fixes */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      /* Ensure consistent background rendering */
+      background: transparent;
     }
     
     .tab-content.active {
@@ -280,6 +283,7 @@
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       background: linear-gradient(135deg, rgba(79, 172, 254, 0.25), rgba(0, 242, 254, 0.25), rgba(67, 233, 123, 0.25));
       backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
       border: 1px solid rgba(79, 172, 254, 0.3);
       border-radius: 16px;
       margin: 0 3px;
@@ -290,6 +294,11 @@
         0 8px 32px 0 rgba(79, 172, 254, 0.3),
         0 4px 16px 0 rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      /* iOS Safari specific fixes */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
     
     .nav-item::before {
@@ -968,12 +977,12 @@
     .player-position {
       position: absolute;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.15s ease-out;
       z-index: 10;
     }
     
     .player-position:hover {
-      transform: scale(1.05);
+      transform: scale(1.02);
     }
     
     .player-card {
@@ -986,7 +995,7 @@
       min-width: 70px;
       min-height: 50px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease;
+      transition: all 0.15s ease-out;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -1002,9 +1011,9 @@
     }
     
     .player-card:hover {
-      background: rgba(255, 255, 255, 1);
+      background: rgba(255, 255, 255, 0.98);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
     }
     
     .player-name {
@@ -1439,7 +1448,8 @@
       pointer-events: none;
     }
     
-    .queue-player-clickable:hover .player-menu-overlay {
+    .queue-player-clickable:hover .player-menu-overlay,
+    .player-card:hover .player-menu-overlay {
       opacity: 1;
     }
     
@@ -1540,6 +1550,18 @@
       
       .tab-content {
         padding: 16px;
+      }
+      
+      /* iOS Safari specific fixes for mobile */
+      .nav-item {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+      
+      .nav-item.active {
+        background: rgba(79, 172, 254, 0.9) !important;
+        color: white !important;
       }
       
       .section-title {
@@ -1687,6 +1709,47 @@
         font-size: 14px;
       }
     }
+    
+    /* iOS Safari specific backdrop-filter fallbacks */
+    @supports not (backdrop-filter: blur(1px)) {
+      .nav-item {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+      
+      .nav-item.active {
+        background: rgba(79, 172, 254, 0.9) !important;
+        color: white !important;
+      }
+      
+      .bottom-actions {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+      
+      .active-match-card,
+      .match-queue-card,
+      .standby-player-card {
+        background: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+    }
+    
+    /* iOS Safari specific fixes */
+    @media screen and (-webkit-min-device-pixel-ratio: 0) {
+      .nav-item {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+      }
+      
+      .tab-content {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+      }
+    }
   </style>
 </head>
 <body>
@@ -1729,6 +1792,9 @@
               <span style="color: #4CAF50; font-weight: 600;">E</span>ngagement 
               <span style="color: #4CAF50; font-weight: 600;">N</span>etwork
             </p>
+            <p style="font-size: 14px; margin-bottom: 8px; opacity: 0.7;">
+              🏸 Live at: smashsyndicateph.com
+            </p>
             
             <!-- Offline Notice -->
             <div style="
@@ -1752,7 +1818,7 @@
             
             <div class="mode-card" id="normal-queue-btn" style="cursor: pointer;">
               <div class="mode-icon">👥</div>
-              <h3 style="color: #0175C2; margin-bottom: 4px;">Normal Queue Mode</h3>
+              <h3 style="color: #0175C2; margin-bottom: 4px;">PJ Mode</h3>
               <p style="color: #666; font-size: 14px;">Manage players, queues, and matches</p>
             </div>
             
@@ -1859,7 +1925,7 @@
         <div class="tab-content" id="courts-tab">
           <div class="section-header">
             <div class="section-title">Courts</div>
-            <button class="btn" onclick="addCourt()">+ Add Court</button>
+            <button class="btn" id="add-court-btn">+ Add Court</button>
           </div>
           
           <div id="courts-list"></div>
@@ -2119,6 +2185,313 @@
             </div>
           </div>
           
+          <!-- FAQ & Best Practices Section -->
+          <div class="card" style="margin-bottom: 20px;">
+            <div style="padding: 20px;">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                <div style="font-size: 24px;">❓</div>
+                <div>
+                  <div style="font-size: 18px; font-weight: 600; color: #0175C2;">FAQ & Best Practices</div>
+                  <div style="font-size: 14px; color: #666;">Learn how to use SmashSyndicate effectively</div>
+                </div>
+              </div>
+              
+              <!-- FAQ Accordion -->
+              <div style="background: rgba(0,0,0,0.05); border-radius: 8px; padding: 16px;">
+                
+                <!-- Getting Started -->
+                <div style="margin-bottom: 16px;">
+                  <div style="font-weight: 600; color: #333; margin-bottom: 8px; font-size: 16px;">🚀 Getting Started</div>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">How do I add players to the system?</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Single Player:</strong> Go to Players tab → "Add Player" → Enter name, select gender and skill level<br>
+                      <strong>Bulk Add:</strong> Use "Bulk Add" mode to add multiple players at once (one name per line)<br>
+                      <strong>Skill Levels:</strong> Choose from 6 levels: Initiate, Cadet, Journeyman, Veteran, Elite, Apex
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">What are the different skill levels and how do I choose?</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Beginner Tier:</strong><br>
+                      • <strong>Initiate:</strong> Just starting out, learning basic rules<br>
+                      • <strong>Cadet:</strong> Understands rules but needs practice<br><br>
+                      <strong>Intermediate Tier:</strong><br>
+                      • <strong>Journeyman:</strong> Competent player with solid understanding<br>
+                      • <strong>Veteran:</strong> Experienced and consistent player<br><br>
+                      <strong>Advanced Tier:</strong><br>
+                      • <strong>Elite:</strong> Highly skilled with advanced strategy<br>
+                      • <strong>Apex:</strong> Among the absolute best players
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">How do I create matches and queues?</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Automatic Queue:</strong> Go to Queue tab → "Add Queue" → System automatically creates balanced matches<br>
+                      <strong>Match Types:</strong><br>
+                      • <strong>Balanced Skill:</strong> Teams with similar average skill levels<br>
+                      • <strong>Mix:</strong> More flexible team combinations<br>
+                      <strong>Synergy Teams:</strong> Create permanent partnerships that always play together
+                    </div>
+                  </details>
+                </div>
+                
+                <!-- Match Management -->
+                <div style="margin-bottom: 16px;">
+                  <div style="font-weight: 600; color: #333; margin-bottom: 8px; font-size: 16px;">🏸 Match Management</div>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">How does the matchmaking algorithm work?</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Balanced Mode:</strong><br>
+                      • Teams must have similar average skill levels (within 0.5 levels)<br>
+                      • Teammates can't have more than 3 skill levels difference<br>
+                      • Overall match skill gap limited to 3 levels maximum<br>
+                      • Prioritizes players with fewer games played<br>
+                      • Avoids recent teammate/opponent pairings for diversity<br><br>
+                      <strong>Mix Mode:</strong> More flexible combinations while still considering skill balance
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">How do I manage active matches?</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Starting Matches:</strong> Assign courts to queue matches to make them active<br>
+                      <strong>Live Tracking:</strong> Active matches show real-time timers and court visualizations<br>
+                      <strong>Player Actions:</strong> Click on any player to replace or swap them<br>
+                      <strong>Recording Results:</strong> Select winning team to complete the match<br>
+                      <strong>Undo Feature:</strong> Recently completed matches can be undone
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">What are Synergy Teams and how do they work?</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Purpose:</strong> Create permanent partnerships that always play together<br>
+                      <strong>Creation:</strong> Go to Players tab → "Synergy" button → Select two players<br>
+                      <strong>Activation:</strong> Toggle "Active" to prioritize these teams in matchmaking<br>
+                      <strong>Benefits:</strong> Ensures consistent partnerships for players who work well together<br>
+                      <strong>Management:</strong> Can be removed or deactivated at any time
+                    </div>
+                  </details>
+                </div>
+                
+                <!-- Advanced Features -->
+                <div style="margin-bottom: 16px;">
+                  <div style="font-weight: 600; color: #333; margin-bottom: 8px; font-size: 16px;">⚡ Advanced Features</div>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">How do I use the Finance Management system?</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Cost Calculator:</strong><br>
+                      • Enter court fees per hour and hours played<br>
+                      • Add shuttlecock costs and quantity used<br>
+                      • System calculates total cost and cost per player<br><br>
+                      <strong>Payment Tracker:</strong><br>
+                      • Mark players as paid using checkboxes<br>
+                      • Track who has paid their share<br>
+                      • Export finance reports as images<br><br>
+                      <strong>Best Practice:</strong> Update costs before each session and track payments in real-time
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">How do I use Statistics and Analytics?</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Individual Stats:</strong> Win rates, games played, performance trends<br>
+                      <strong>Pair Statistics:</strong> See which player combinations work best together<br>
+                      <strong>Star Players:</strong> Identify top performers and most improved players<br>
+                      <strong>Encouragement Section:</strong> Find players who need more playing time<br>
+                      <strong>Export:</strong> Save statistics as images for sharing or record keeping
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">How do I handle player substitutions and swaps?</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Replace Player:</strong> Substitute with a standby player (for injuries, leaving early)<br>
+                      <strong>Swap Players:</strong> Exchange players between teams or with teammates<br>
+                      <strong>When to Use:</strong><br>
+                      • Replace: Player injured, needs to leave, or is tired<br>
+                      • Swap: Balance teams better or give different playing experience<br>
+                      <strong>Best Practice:</strong> Use sparingly to maintain match integrity
+                    </div>
+                  </details>
+                </div>
+                
+                <!-- Common Scenarios -->
+                <div style="margin-bottom: 16px;">
+                  <div style="font-weight: 600; color: #333; margin-bottom: 8px; font-size: 16px;">🎯 Common Scenarios & Solutions</div>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">Scenario: New players joining mid-session</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Solution:</strong><br>
+                      1. Add new players to the system (Players tab)<br>
+                      2. Create a new queue to include them<br>
+                      3. System will automatically balance teams with new players<br>
+                      4. Consider their skill level carefully for fair matchmaking<br><br>
+                      <strong>Tip:</strong> Ask about their badminton experience to assign appropriate skill level
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">Scenario: Uneven skill distribution causing poor matches</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Solutions:</strong><br>
+                      1. <strong>Use Mix Mode:</strong> More flexible team combinations<br>
+                      2. <strong>Create Synergy Teams:</strong> Pair strong players with weaker ones<br>
+                      3. <strong>Manual Queue:</strong> Manually select balanced teams<br>
+                      4. <strong>Skill Reassessment:</strong> Adjust player skill levels if needed<br><br>
+                      <strong>Prevention:</strong> Regularly review and update skill levels based on performance
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">Scenario: Managing multiple courts simultaneously</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Best Practice:</strong><br>
+                      1. <strong>Add Courts:</strong> Go to Courts tab → "Add Court" for each available court<br>
+                      2. <strong>Queue Management:</strong> Create enough matches for all courts<br>
+                      3. <strong>Sequential Assignment:</strong> Assign courts one at a time as matches complete<br>
+                      4. <strong>Monitor Standby:</strong> Keep track of players waiting to play<br>
+                      5. <strong>Quick Actions:</strong> Use player menus for fast substitutions<br><br>
+                      <strong>Tip:</strong> Use the standby players section to see who's available for quick substitutions
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">Scenario: Tournament or special event organization</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Preparation:</strong><br>
+                      1. <strong>Pre-register Players:</strong> Add all participants beforehand<br>
+                      2. <strong>Skill Assessment:</strong> Ensure accurate skill levels for fair brackets<br>
+                      3. <strong>Court Planning:</strong> Add all available courts<br>
+                      4. <strong>Synergy Teams:</strong> Create known partnerships<br><br>
+                      <strong>During Event:</strong><br>
+                      • Use manual queues for specific matchups<br>
+                      • Monitor statistics for bracket seeding<br>
+                      • Export results for tournament records<br>
+                      • Use finance tracking for event costs
+                    </div>
+                  </details>
+                </div>
+                
+                <!-- Troubleshooting -->
+                <div style="margin-bottom: 16px;">
+                  <div style="font-weight: 600; color: #333; margin-bottom: 8px; font-size: 16px;">🔧 Troubleshooting</div>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">The app won't create balanced matches</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Possible Causes:</strong><br>
+                      • Too few players available (need at least 4)<br>
+                      • Extreme skill gaps between players<br>
+                      • Too many synergy teams active<br>
+                      • Recent match history preventing diversity<br><br>
+                      <strong>Solutions:</strong><br>
+                      1. Switch to "Mix" mode for more flexibility<br>
+                      2. Deactivate some synergy teams<br>
+                      3. Adjust player skill levels<br>
+                      4. Use manual queue creation<br>
+                      5. Clear recent match history if needed
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">Players getting left out or not enough games</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Solutions:</strong><br>
+                      1. <strong>Check Standby Players:</strong> See who hasn't played recently<br>
+                      2. <strong>Manual Queue:</strong> Create specific matches for left-out players<br>
+                      3. <strong>Player Exclusion:</strong> Temporarily exclude players who've played many games<br>
+                      4. <strong>Skill Balance:</strong> Ensure skill levels are accurate<br>
+                      5. <strong>Monitor Statistics:</strong> Use the encouragement section to identify players needing more time
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">Data loss or app not working properly</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Prevention:</strong><br>
+                      • Data is stored locally in your browser<br>
+                      • Don't clear browser data while using the app<br>
+                      • Export statistics regularly as backup<br><br>
+                      <strong>Recovery:</strong><br>
+                      1. Refresh the page first<br>
+                      2. Check if data loads after refresh<br>
+                      3. If lost, you may need to re-enter data<br>
+                      4. Contact support if issues persist<br><br>
+                      <strong>Best Practice:</strong> Export your data regularly using the export functions
+                    </div>
+                  </details>
+                </div>
+                
+                <!-- Pro Tips -->
+                <div style="margin-bottom: 16px;">
+                  <div style="font-weight: 600; color: #333; margin-bottom: 8px; font-size: 16px;">💡 Pro Tips</div>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">Maximizing player engagement and fairness</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Engagement Strategies:</strong><br>
+                      • Regularly review the "Players Needing Encouragement" section<br>
+                      • Use statistics to identify players who need more playing time<br>
+                      • Create balanced matches to keep games competitive<br>
+                      • Use synergy teams for players who enjoy playing together<br><br>
+                      <strong>Fairness Tips:</strong><br>
+                      • Update skill levels based on actual performance<br>
+                      • Monitor win rates to ensure balanced progression<br>
+                      • Use the diversity system to prevent cliques<br>
+                      • Rotate players regularly to give everyone equal opportunities
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">Efficient session management</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Session Setup:</strong><br>
+                      1. Add all players before starting<br>
+                      2. Set up finance tracking early<br>
+                      3. Create initial queues for all courts<br>
+                      4. Have standby players ready<br><br>
+                      <strong>During Session:</strong><br>
+                      • Keep matches moving quickly<br>
+                      • Use quick player actions for substitutions<br>
+                      • Monitor court utilization<br>
+                      • Track payments in real-time<br><br>
+                      <strong>Session End:</strong><br>
+                      • Export final statistics<br>
+                      • Save finance report<br>
+                      • Review player performance for skill updates
+                    </div>
+                  </details>
+                  
+                  <details style="margin-bottom: 8px;">
+                    <summary style="cursor: pointer; padding: 8px; background: rgba(255,255,255,0.5); border-radius: 6px; font-weight: 500;">Advanced features for power users</summary>
+                    <div style="padding: 12px; background: rgba(255,255,255,0.3); border-radius: 6px; margin-top: 4px; font-size: 14px;">
+                      <strong>Data Management:</strong><br>
+                      • Export statistics regularly for record keeping<br>
+                      • Use finance tracking for cost analysis<br>
+                      • Monitor pair statistics for team optimization<br><br>
+                      <strong>Matchmaking Optimization:</strong><br>
+                      • Fine-tune skill levels based on performance<br>
+                      • Use synergy teams strategically<br>
+                      • Balance diversity with player preferences<br><br>
+                      <strong>Event Planning:</strong><br>
+                      • Pre-plan tournaments with player registration<br>
+                      • Use manual queues for specific matchups<br>
+                      • Track tournament progression with statistics
+                    </div>
+                  </details>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <!-- App Information Section -->
           <div class="card">
             <div style="padding: 20px;">
@@ -2126,14 +2499,14 @@
                 <div style="font-size: 24px;">ℹ️</div>
                 <div>
                   <div style="font-size: 18px; font-weight: 600; color: #0175C2;">App Information</div>
-                  <div style="font-size: 14px; color: #666;">About SmashSyndicate</div>
+                  <div style="font-size: 14px; color: #666;">About Smash Syndicate</div>
                 </div>
               </div>
               
               <div style="background: rgba(0,0,0,0.05); border-radius: 8px; padding: 16px;">
                 <div style="margin-bottom: 12px;">
-                  <div style="font-weight: 600; color: #333; margin-bottom: 4px;">SmashSyndicate</div>
-                  <div style="font-size: 14px; color: #666;">Badminton Tournament Manager</div>
+                  <div style="font-weight: 600; color: #333; margin-bottom: 4px;">Smash Syndicate</div>
+                  <div style="font-size: 14px; color: #666;"><span style="color: #4CAF50; font-weight: 600;">B</span>adminton <span style="color: #4CAF50; font-weight: 600;">E</span>ngagement <span style="color: #4CAF50; font-weight: 600;">N</span>etwork</div>
                 </div>
                 
                 <div style="margin-bottom: 12px;">
@@ -2149,7 +2522,9 @@
                     • Live Match Tracking with Timers<br>
                     • Statistics and Export Functionality<br>
                     • Replace & Swap Player Options<br>
-                    • Progressive Web App Support
+                    • Progressive Web App Support<br>
+                    • Finance Management & Cost Tracking<br>
+                    • Advanced Matchmaking Algorithms
                   </div>
                 </div>
                 
@@ -2633,7 +3008,7 @@
 
     // App State
     let players = [];
-    let courts = ['Court 1', 'Court 2'];
+    let courts = [];
     let queue = [];
     let synergyTeams = [];
     let isSynergyModeActive = false;
@@ -2658,26 +3033,9 @@
 
     // PWA Setup
     function setupPWA() {
-      const manifest = {
-        name: "Smash Syndicate - Badminton Engagement Network",
-        short_name: "Smash Syndicate",
-        start_url: window.location.href,
-        display: "standalone",
-        background_color: "#2196F3",
-        theme_color: "#2196F3",
-        description: "Complete badminton tournament and match management application",
-        icons: [
-          {
-            src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='50' fill='%232196F3'/%3E%3Ctext x='256' y='340' font-family='Arial' font-size='300' text-anchor='middle' fill='white'%3E🏸%3C/text%3E%3C/svg%3E",
-            sizes: "512x512",
-            type: "image/svg+xml"
-          }
-        ]
-      };
-
-      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-      const manifestUrl = URL.createObjectURL(manifestBlob);
-      document.getElementById('manifest-link').href = manifestUrl;
+      // PWA manifest is now served as a static file
+      // The manifest.json file is already linked in the HTML head
+      console.log('PWA setup complete - using static manifest.json');
     }
 
     // Navigation
@@ -3728,12 +4086,43 @@
 
     // Court Management with Visual Display
     function addCourt() {
+      // Prevent multiple rapid clicks
+      if (addCourt.isProcessing) {
+        console.log('Add court already in progress, ignoring click');
+        return;
+      }
+      
+      addCourt.isProcessing = true;
+      
       const name = prompt('Enter court name:');
       if (name && name.trim()) {
-        courts.push(name.trim());
+        const courtName = name.trim();
+        
+        // Check if court already exists
+        if (courts.includes(courtName)) {
+          alert(`Court "${courtName}" already exists!`);
+          addCourt.isProcessing = false;
+          return;
+        }
+        
+        console.log(`Adding court: "${courtName}"`);
+        console.log(`Courts before: ${courts.length}`, courts);
+        
+        courts.push(courtName);
+        
+        console.log(`Courts after: ${courts.length}`, courts);
+        
         updateCourtsDisplay();
         saveToStorage();
+        
+        // Show confirmation
+        console.log(`✅ Successfully added court: "${courtName}"`);
       }
+      
+      // Reset processing flag after a short delay
+      setTimeout(() => {
+        addCourt.isProcessing = false;
+      }, 1000);
     }
 
     function removeCourt(index) {
@@ -3745,7 +4134,24 @@
     }
 
     function updateCourtsDisplay() {
+      console.log(`🔄 Updating courts display. Total courts: ${courts.length}`, courts);
+      
       const container = document.getElementById('courts-list');
+      if (!container) {
+        console.error('Courts list container not found!');
+        return;
+      }
+      
+      if (courts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🏸</div>
+            <h3>No courts added yet</h3>
+            <p>Tap "Add Court" to get started!</p>
+          </div>
+        `;
+        return;
+      }
       
       container.innerHTML = courts.map((court, index) => `
         <div class="active-match-card">
@@ -4305,7 +4711,7 @@
         const match = queue[matchIndex];
         
         if (courts.length === 0) {
-          alert('No courts available! Please add a court first.');
+          alert('⚠️ No courts available!\n\nPlease add at least one court in the Courts tab before starting matches.');
           return;
         }
 
@@ -5285,7 +5691,7 @@
         const timeDisplay = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         
         return `
-          <div class="active-match-card">
+          <div class="active-match-card" data-match-id="${match.id}">
             <div class="match-header">
               <div class="court-name">${match.court}</div>
               <div class="match-timer">${timeDisplay}</div>
@@ -5322,6 +5728,7 @@
                 <div class="player-card">
                   <div class="player-name">${match.team1[0].name}</div>
                   <div class="player-skill">${skillLevels[match.team1[0].skillLevel].name}</div>
+                  <div class="player-menu-overlay">CLICK</div>
                 </div>
               </div>
               
@@ -5329,6 +5736,7 @@
                 <div class="player-card">
                   <div class="player-name">${match.team1[1].name}</div>
                   <div class="player-skill">${skillLevels[match.team1[1].skillLevel].name}</div>
+                  <div class="player-menu-overlay">CLICK</div>
                 </div>
               </div>
               
@@ -5337,6 +5745,7 @@
                 <div class="player-card">
                   <div class="player-name">${match.team2[0].name}</div>
                   <div class="player-skill">${skillLevels[match.team2[0].skillLevel].name}</div>
+                  <div class="player-menu-overlay">CLICK</div>
                 </div>
               </div>
               
@@ -5344,6 +5753,7 @@
                 <div class="player-card">
                   <div class="player-name">${match.team2[1].name}</div>
                   <div class="player-skill">${skillLevels[match.team2[1].skillLevel].name}</div>
+                  <div class="player-menu-overlay">CLICK</div>
                 </div>
               </div>
             </div>
@@ -5416,10 +5826,20 @@
       }
     }
 
-    // Update timers every second
+    // Update timers every second (only the timer text, not the entire card)
     setInterval(() => {
       if (activeMatches.length > 0) {
-        updateActiveMatchesDisplay();
+        // Update only the timer text to prevent re-rendering the entire card
+        activeMatches.forEach(match => {
+          const timerElement = document.querySelector(`[data-match-id="${match.id}"] .match-timer`);
+          if (timerElement) {
+            const elapsedTime = Math.floor((Date.now() - match.startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60);
+            const seconds = elapsedTime % 60;
+            const timeDisplay = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            timerElement.textContent = timeDisplay;
+          }
+        });
       }
     }, 1000);
 
@@ -5925,7 +6345,7 @@
       
       // Clear all application data
       players = [];
-      courts = ['Court 1', 'Court 2'];
+      courts = [];
       queue = [];
       synergyTeams = [];
       isSynergyModeActive = false;
@@ -7363,6 +7783,17 @@
       });
       
       console.log('All navigation event listeners added');
+      
+      // Add event listener for add court button to prevent double-clicking
+      const addCourtBtn = document.getElementById('add-court-btn');
+      if (addCourtBtn) {
+        addCourtBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Add court button clicked');
+          addCourt();
+        });
+      }
       
       console.log('🏸 Smash Syndicate Enhanced PWA loaded successfully!');
     });
